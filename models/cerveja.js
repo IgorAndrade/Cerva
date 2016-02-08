@@ -3,7 +3,8 @@ module.exports = function(){
 
 	var cerveja = db.Schema({
 		nome: {type: String, required: true},
-		descricao: {type: String, required: false}
+		descricao: {type: String, required: true},
+		cervejaria: {type: String, required: false}
 	});
 
 	return db.model('cervejas',cerveja);
