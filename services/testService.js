@@ -3,6 +3,7 @@ module.exports  = function(app) {
 var Test = {
 
  test1  : function (req, res) {
+ 	var beer = require('../extra/estilos');
   res.json({
     name: 'teste service 1 wefwfdwef  ff' 
   });

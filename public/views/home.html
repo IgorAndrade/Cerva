@@ -9,9 +9,8 @@
 		<div class="sidebar-module sidebar-module-inset"> 
 			igor: {{ welcome }}
 			<ul>
-    <li ng-repeat="todo in todos">
-      <input type="checkbox" ng-model="todo.completed">
-      <a href="#/{{$index}}">{{todo.name}}</a>
+    <li ng-repeat="c in cervejas">
+      <a href="#/{{$index}}">{{c.nome}}</a>
     </li>
   </ul>
 		</div> 
