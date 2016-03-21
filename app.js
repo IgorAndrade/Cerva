@@ -69,8 +69,8 @@ if (env === 'production') {
  * Routes
  */
 
-load("services").
-then("models").into(app);
+load("models").
+then("services").into(app);
 
 /**
  * DB
