@@ -2,17 +2,31 @@
 
 // Declare app level module which depends on filters, and services
 
-angular.module('app', ['ngRoute'])
-.config( ['$routeProvider', function ($routeProvider)  { 
+angular.module('app', ['ngRoute','restangular'])
+.config( function ($routeProvider)  { 
 	$routeProvider
 	.when('/', { 
 		templateUrl : '/views/home.html', 
 		controller : 'HomeController'})
-	.when('/novo', { 
-		templateUrl : '/views/novo.html', 
-		controller : 'NovoController'})
+	.when('/cerveja', { 
+		templateUrl : '/views/cerveja.html', 
+		controller : 'CervejaController'})
+	.when('/listaCerveja', { 
+		templateUrl : '/views/listaCerveja.html', 
+		controller : 'CervejaController'})
 	.otherwise({
         templateUrl: '/views/home.html',
         controller: 'HomeController'
      });
-}]);
+	
+}).run(function($rootScope){
+	$rootScope.$on( "$routeChangeStart", function(event, next, current) {
+		$rootScope.$on('$viewContentLoaded', init);
+	})
+})
+.config(function(RestangularProvider) {
+      RestangularProvider.setRestangularFields({
+        id: '_id'
+      });
+    });
+;

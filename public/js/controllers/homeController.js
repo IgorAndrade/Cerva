@@ -3,39 +3,18 @@
 /* Controllers */
 
 angular.module('app').
-  controller('HomeController', function ($scope, $http,CervejaRepository) {
+  controller('HomeController', ['$scope','CervejaRepository', function ($scope,CervejaRepository) {
 
    $scope.welcome="Olá!";
 
    CervejaRepository.getList().then(function(lista){
     $scope.cervejas = lista;
+    $scope.del=function(d,i){
+      $scope.cervejas.splice(i, 1);
+      d.remove();
+    }
   });
+  $scope.total=200;
+   //$scope.$on('$viewContentLoaded', init);
 
-  })
-.controller('TodoController', ['$scope',  function ($scope) {
-    $scope.todos = [
-      { name: 'AngularJS Directives', completed: true, note: 'add notes...' },
-      { name: 'Data binding', completed: true, note: 'add notes...' },
-      { name: '$scope', completed: true, note: 'add notes...' },
-      { name: 'Controllers and Modules', completed: true, note: 'add notes...' },
-      { name: 'Templates and routes', completed: true, note: 'add notes...' },
-      { name: 'Filters and Services', completed: false, note: 'add notes...' },
-      { name: 'Get started with Node/ExpressJS', completed: false, note: 'add notes...' },
-      { name: 'Setup MongoDB database', completed: false, note: 'add notes...' },
-      { name: 'Be awesome!', completed: false, note: 'add notes...' },
-    ];
-  }])
-.controller('TodoDetailCtrl', ['$scope', '$routeParams',  function ($scope, $routeParams) {
-	var Todos = [
-      { name: 'AngularJS Directives', completed: true, note: 'add notes...' },
-      { name: 'Data binding', completed: true, note: 'add notes...' },
-      { name: '$scope', completed: true, note: 'add notes...' },
-      { name: 'Controllers and Modules', completed: true, note: 'add notes...' },
-      { name: 'Templates and routes', completed: true, note: 'add notes...' },
-      { name: 'Filters and Services', completed: false, note: 'add notes...' },
-      { name: 'Get started with Node/ExpressJS', completed: false, note: 'add notes...' },
-      { name: 'Setup MongoDB database', completed: false, note: 'add notes...' },
-      { name: 'Be awesome!', completed: false, note: 'add notes...' },
-    ];
-    $scope.todo = Todos[$routeParams.id];
-  }])
+  }]);
