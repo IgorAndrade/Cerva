@@ -13,22 +13,18 @@ var multer = require('multer');
 var errorHandler = require('errorhandler');
 var expressValidator = require("express-validator");
 var morgan = require('morgan'),
-  routes = require('./routes'),
-  api = require('./routes/api'),
   http = require('http'),
-  conf = require('./config'),
+  conf = require('./env/'+process.env.NODE_ENV +'/config'),
   load = require('express-load'),
   path = require('path');
 var app = module.exports = express();
-
-
 
 /**
  * Configuration
  */
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', conf.port || 3000);
 app.use(express.static(path.join(__dirname, '/public')));
 app.set('views', __dirname + '/public/views');
 app.engine('html', require('ejs').renderFile);
@@ -52,15 +48,15 @@ app.use(multer());
 
 
 
-var env = process.env.NODE_ENV || 'development';
+var env = process.env.NODE_ENV || 'dev';
 
 // development only
-if (env === 'development') {
+if (env === 'dev') {
   app.use(errorHandler());
 }
 
 // production only
-if (env === 'production') {
+if (env === 'producao') {
   // TODO
 }
 
@@ -77,7 +73,7 @@ then("services").into(app);
  */
 var mongoose = require('mongoose');
 
-global.db = mongoose.connect("mongodb://localhost/cerva");
+global.db = mongoose.connect(conf.db.url);
 
 //DB  fim
 
@@ -96,6 +92,6 @@ app.get('*', function(req, res){
  * Start Server
  */
 
-http.createServer(app).listen(app.get('port'), function () {
+http.createServer(app).listen(conf.port, conf.ip, function () {
   console.log('Express server listening on port ' + app.get('port'));
 });

@@ -6,6 +6,8 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "angular": "^1.5.2",
+    "angular-route": "^1.5.2",
     "body-parser": "^1.0.2",
     "bootstrap": "^3.3.6",
     "ejs": "0.8.4",
@@ -20,4 +22,5 @@
     "multer": "0.1.*",
     "restangular": "^1.5.2"
   }
+  "main": "app.js"
 }
