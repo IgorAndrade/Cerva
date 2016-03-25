@@ -1,16 +1,16 @@
-<section id="slider">
-	<div class="container" style="margin-top:65px">
 <div class="row" > 
 	<div class="col-sm-8 blog-main"> 
-		{{ welcome }}
+		<div class="blog-post" ng-repeat="post in data.posts" > 
+			<h2 class="blog-post-title">{{ welcome }}</h2> 
+
+		</div> 
 	</div> 
 	<div class="col-sm-3 col-sm-offset-1 blog-sidebar"> 
 		<div class="sidebar-module sidebar-module-inset"> 
 			igor: {{ welcome }}
 			<ul>
-    <li ng-repeat="todo in todos">
-      <input type="checkbox" ng-model="todo.completed">
-      <a href="#/{{$index}}">{{todo.name}}</a>
+    <li ng-repeat="c in cervejas">
+      <a href="#/" ng-click="del(c,$index)" >{{c.nome}}</a>
     </li>
   </ul>
 		</div> 
@@ -24,5 +24,3 @@
 			</div> 
 	</div> 
 </div>
-</div>
-</section>
