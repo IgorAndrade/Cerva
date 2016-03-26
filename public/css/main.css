@@ -68,7 +68,7 @@ span.color {
 	color: #0feb9e;
 }
 
-body > section,
+section,
 .footer {
 	padding: 70px 0;
 }
