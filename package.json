@@ -21,6 +21,6 @@
     "morgan": "^1.0.0",
     "multer": "0.1.*",
     "restangular": "^1.5.2"
-  }
+  },
   "main": "app.js"
 }
