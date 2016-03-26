@@ -9,6 +9,17 @@ angular.module('app').
   		$scope.cervejarias=cervejarias;
   	})
 
+    $scope.pesquisar=function(){
+      CervejaRepository.customGET("pesquisar",{q:$scope.query}).then(
+        function(result){
+          $scope.cervejas=result
+        },
+        function(error){
+          
+        }
+      );
+    }
+
   	$scope.submit = function() {
         if ($scope.cerveja) {
         	CervejaRepository.post($scope.cerveja).then(function(result){

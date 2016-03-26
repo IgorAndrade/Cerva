@@ -1,3 +1,5 @@
 module.exports = {
-	"index":"index.html"
+	chaves:{
+		brewerydb:"fec524048fd1c1bd6ac196268bbbd414"
+	}
 }

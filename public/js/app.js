@@ -12,7 +12,7 @@ angular.module('app', ['ngRoute','restangular'])
 		templateUrl : '/views/cerveja.html', 
 		controller : 'CervejaController'})
 	.when('/listaCerveja', { 
-		templateUrl : '/views/listaCerveja.html', 
+		templateUrl : '/views/cervejas/listaCervejas.html', 
 		controller : 'CervejaController'})
 	.otherwise({
         templateUrl: '/views/home.html',

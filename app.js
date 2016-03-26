@@ -15,10 +15,12 @@ var expressValidator = require("express-validator");
 var morgan = require('morgan'),
   http = require('http'),
   conf = require('./env/'+process.env.NODE_ENV +'/config'),
+  allconf = require('./env/all/config'),
   load = require('express-load'),
   path = require('path');
 var app = module.exports = express();
-
+app.conf=conf;
+app.conf.all=allconf;
 /**
  * Configuration
  */
