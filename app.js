@@ -94,7 +94,7 @@ global.db = mongoose.connect(conf.db.url);
 
 //DB  fim
 
-app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+
 
     // the callback after google has authenticated the user
     /*
@@ -118,8 +118,15 @@ app.get('/auth/google/callback',
     })(req, res);
     });
 */
+app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
 app.get('/auth/google/callback',
             passport.authenticate('google', {
+                    failureRedirect : '/',
+                    successRedirect : '/#/listaCerveja'
+            }));
+app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+app.get('/auth/facebook/callback',
+            passport.authenticate('facebook', {
                     failureRedirect : '/',
                     successRedirect : '/#/listaCerveja'
             }));
