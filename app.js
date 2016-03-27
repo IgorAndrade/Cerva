@@ -60,7 +60,7 @@ app.isLoggedInAjax = function isLoggedInAjax(req, res, next) {
     if (req.isAuthenticated()) {
         next();
     } else {
-       res.status(412).json({ "error": "Usuário não logado!" });
+       res.status(401).json({ "error": "Usuário não logado!" });
     }
 };
 
