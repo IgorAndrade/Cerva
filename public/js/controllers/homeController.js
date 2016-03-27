@@ -3,9 +3,11 @@
 /* Controllers */
 
 angular.module('app').
-  controller('HomeController', ['$scope','CervejaRepository', function ($scope,CervejaRepository) {
+  controller('HomeController', ['$scope','CervejaRepository','$routeParams', function ($scope,CervejaRepository,$routeParams) {
 
-   $scope.welcome="Olá!";
+   $scope.welcome="Olá!"+$routeParams.uid;
+   if($routeParams.uid)
+    $window.sessionStorage.token = $routeParams.uid;
 
    CervejaRepository.getList().then(function(lista){
     $scope.cervejas = lista;

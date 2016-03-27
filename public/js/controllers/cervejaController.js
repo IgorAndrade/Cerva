@@ -15,7 +15,7 @@ angular.module('app').
           $scope.cervejas=result
         },
         function(error){
-          
+          $scope.cervejas=[];
         }
       );
     }

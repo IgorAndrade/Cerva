@@ -12,15 +12,19 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var errorHandler = require('errorhandler');
 var expressValidator = require("express-validator");
+var passport = require('passport');
 var morgan = require('morgan'),
   http = require('http'),
   conf = require('./env/'+process.env.NODE_ENV +'/config'),
+  auth = require('./env/'+process.env.NODE_ENV +'/auth'),
   allconf = require('./env/all/config'),
   load = require('express-load'),
   path = require('path');
+  var cookieParser = require('cookie-parser');
 var app = module.exports = express();
 app.conf=conf;
 app.conf.all=allconf;
+app.auth=auth;
 /**
  * Configuration
  */
@@ -34,6 +38,7 @@ app.set('view engine', 'html');
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(methodOverride());
+app.use(cookieParser());
 app.use(session({ resave: true, saveUninitialized: true, 
                   secret: 'uwotm8' }));
 app.use(expressValidator());
@@ -48,7 +53,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse multipart/form-data
 app.use(multer());
 
+app.use(passport.initialize());
+app.use(passport.session());
 
+app.isLoggedInAjax = function isLoggedInAjax(req, res, next) {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+       res.status(412).json({ "error": "Usuário não logado!" });
+    }
+};
 
 var env = process.env.NODE_ENV || 'dev';
 
@@ -68,6 +82,7 @@ if (env === 'producao') {
  */
 
 load("models").
+then("passports").
 then("services").into(app);
 
 /**
@@ -78,6 +93,36 @@ var mongoose = require('mongoose');
 global.db = mongoose.connect(conf.db.url);
 
 //DB  fim
+
+app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+
+    // the callback after google has authenticated the user
+    /*
+app.get('/auth/google/callback',
+    function(req, res, next) {
+      passport.authenticate('google',
+        function(err, user, info) {
+        if (err) { 
+            return res.json(err);
+        }
+        if (user.error) {
+            return res.json({ error: user.error });
+        }
+        req.logIn(user, function(err) {
+            if (err) {
+                return res.json(err);
+            }
+            res.redirect("/#/?uid="+user._id);
+            return null;
+        });
+    })(req, res);
+    });
+*/
+app.get('/auth/google/callback',
+            passport.authenticate('google', {
+                    failureRedirect : '/',
+                    successRedirect : '/#/listaCerveja'
+            }));
 
 // serve index and view partials
 app.get('/', function(req, res){

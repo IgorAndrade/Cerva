@@ -35,7 +35,7 @@ var Service = {
 
 app.post('/services/cerveja', crud.inserir);
 app.get('/services/cerveja', crud.listar);
-app.get('/services/cerveja/pesquisar', Service.pesquisar);
+app.get('/services/cerveja/pesquisar',app.isLoggedInAjax, Service.pesquisar);
 app.get('/services/cerveja/:id', crud.buscarById);
 app.put('/services/cerveja/:id', crud.update);
 app.delete('/services/cerveja/:id', crud.deletar);

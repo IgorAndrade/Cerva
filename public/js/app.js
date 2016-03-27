@@ -8,6 +8,9 @@ angular.module('app', ['ngRoute','restangular'])
 	.when('/', { 
 		templateUrl : '/views/home.html', 
 		controller : 'HomeController'})
+	.when("/login:id",{
+		templateUrl : '/views/home.html', 
+		controller : 'HomeController'})
 	.when('/cerveja', { 
 		templateUrl : '/views/cerveja.html', 
 		controller : 'CervejaController'})
@@ -28,5 +31,8 @@ angular.module('app', ['ngRoute','restangular'])
       RestangularProvider.setRestangularFields({
         id: '_id'
       });
-    });
-;
+    })
+.config(function ($httpProvider) {
+    $httpProvider.interceptors.push('TokenInterceptor');
+});;
+
