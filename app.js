@@ -64,6 +64,14 @@ app.isLoggedInAjax = function isLoggedInAjax(req, res, next) {
     }
 };
 
+// route middleware to ensure user is logged in
+app.isLoggedIn = function(req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+
+    res.redirect('/#/login');
+};
+
 var env = process.env.NODE_ENV || 'dev';
 
 // development only
@@ -93,43 +101,72 @@ var mongoose = require('mongoose');
 global.db = mongoose.connect(conf.db.url);
 
 //DB  fim
+//busca User Logado
+app.get('/profile', app.isLoggedInAjax, function(req, res) {
+    res.status(200).json(req.user);
+});
 
-
-
-    // the callback after google has authenticated the user
-    /*
-app.get('/auth/google/callback',
-    function(req, res, next) {
-      passport.authenticate('google',
-        function(err, user, info) {
-        if (err) { 
-            return res.json(err);
+//Ajax Login
+app.post('/login', function(req, res, next) {
+  passport.authenticate('local-login', function(err, user, info) {
+    if (err) { 
+            return res.status(400).json(err);
         }
         if (user.error) {
-            return res.json({ error: user.error });
+            return res.status(400).json({ error: user.error });
         }
+        
         req.logIn(user, function(err) {
             if (err) {
                 return res.json(err);
             }
-            res.redirect("/#/?uid="+user._id);
-            return null;
+            return res.status(200).json(user);
         });
-    })(req, res);
-    });
-*/
+        
+      //  res.status(200).json(req.user);
+  })(req, res, next);
+});
+
+//Logado via redesocial
+app.post('/logadoRedeSocial', function(req, res, next) {
+  passport.authenticate('logado-redesocial', function(err, user, info) {
+    if (err) { 
+            return res.status(400).json(err);
+        }
+        if (user.error) {
+            return res.status(400).json({ error: user.error });
+        }
+        
+        req.logIn(user, function(err) {
+            if (err) {
+                return res.json(err);
+            }
+            return res.status(200).json(user);
+        });
+        
+       // res.status(200).json(req.user);
+  })(req, res, next);
+});
+
+//google
 app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
 app.get('/auth/google/callback',
             passport.authenticate('google', {
                     failureRedirect : '/',
                     successRedirect : '/#/listaCerveja'
             }));
+//facebook
 app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
 app.get('/auth/facebook/callback',
             passport.authenticate('facebook', {
                     failureRedirect : '/',
                     successRedirect : '/#/listaCerveja'
             }));
+ // route for logging out
+app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+});
 
 // serve index and view partials
 app.get('/', function(req, res){

@@ -36,6 +36,9 @@ var FacebookStrategy = require('passport-facebook').Strategy;
                     return done(err);
 
                 if (user) {
+                    user.facebook.id    = profile.id;
+                    user.facebook.token = token;
+                    Usuario.update({_id:user._id},{ $set: {facebook:{id:profile.id,token:token}}});
 
                     // if a user is found, log them in
                     return done(null, user);
@@ -44,10 +47,11 @@ var FacebookStrategy = require('passport-facebook').Strategy;
                     var newUser  = new Usuario();
 
                     // set all of the relevant information
-                    newUser.tokenFacebook = token;
                     newUser.nome  = profile.displayName;
-                    newUser.email = profile.emails[0].value; // pull the first email
+                    newUser.email = profile.emails[0].value.toLowerCase(); // pull the first email
                     newUser.senha = "password";
+                    newUser.facebook.id    = profile.id;
+                    newUser.facebook.token = token;
 
                     // save the user
                     newUser.save(function(err) {

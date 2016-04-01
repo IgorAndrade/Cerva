@@ -36,6 +36,10 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
                 if (user) {
 
+                    user.google.id    = profile.id;
+                    user.google.token = token;
+                    Usuario.update({_id:user._id},{ $set: {google:{id:profile.id,token:token}}});
+
                     // if a user is found, log them in
                     return done(null, user);
                 } else {
@@ -43,9 +47,10 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
                     var newUser  = new Usuario();
 
                     // set all of the relevant information
-                    newUser.tokenGoogle = token;
                     newUser.nome  = profile.displayName;
-                    newUser.email = profile.emails[0].value; // pull the first email
+                    newUser.email = profile.emails[0].value.toLowerCase(); // pull the first email
+                    newUser.google.id    = profile.id;
+                    newUser.google.token = token;
                     newUser.senha = "password";
 
                     // save the user

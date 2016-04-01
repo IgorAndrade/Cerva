@@ -8,6 +8,7 @@
   "dependencies": {
     "angular": "^1.5.2",
     "angular-route": "^1.5.2",
+    "bcrypt-nodejs": "latest",
     "body-parser": "^1.0.2",
     "bootstrap": "^3.3.6",
     "brewerydb-node": "0.0.1",
@@ -25,6 +26,8 @@
     "passport": "^0.2.2",
     "passport-facebook": "^2.1.0",
     "passport-google-oauth": "^1.0.0",
+    "passport-local": "~0.1.6",
+    "password-generator": "^2.0.2",
     "restangular": "^1.5.2"
   },
   "main": "app.js"
