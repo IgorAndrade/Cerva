@@ -19,6 +19,7 @@ var morgan = require('morgan'),
   auth = require('./env/'+process.env.NODE_ENV +'/auth'),
   allconf = require('./env/all/config'),
   load = require('express-load'),
+  cors = require('cors'),
   path = require('path');
   var cookieParser = require('cookie-parser');
 var app = module.exports = express();
@@ -43,6 +44,7 @@ app.use(session({ resave: true, saveUninitialized: true,
                   secret: 'uwotm8' }));
 app.use(expressValidator());
 
+app.use(cors());
 
 // parse application/json
 app.use(bodyParser.json());                        
@@ -110,15 +112,16 @@ app.get('/profile', app.isLoggedInAjax, function(req, res) {
 app.post('/login', function(req, res, next) {
   passport.authenticate('local-login', function(err, user, info) {
     if (err) { 
-            return res.status(400).json(err);
+            return res.status(500).json(err);
         }
         if (user.error) {
             return res.status(400).json({ error: user.error });
-        }
+        }else if (user==false)
+          return res.status(400).json({ error: "Login inválido" });
         
         req.logIn(user, function(err) {
             if (err) {
-                return res.json(err);
+                return res.status(500).json(err);
             }
             return res.status(200).json(user);
         });
@@ -131,15 +134,38 @@ app.post('/login', function(req, res, next) {
 app.post('/logadoRedeSocial', function(req, res, next) {
   passport.authenticate('logado-redesocial', function(err, user, info) {
     if (err) { 
-            return res.status(400).json(err);
+            return res.status(500).json(err);
         }
         if (user.error) {
             return res.status(400).json({ error: user.error });
-        }
+        }else if (user==false)
+          return res.status(400).json({ error: "Login inválido" });
         
         req.logIn(user, function(err) {
             if (err) {
-                return res.json(err);
+                return res.status(500).json(err);
+            }
+            return res.status(200).json(user);
+        });
+        
+       // res.status(200).json(req.user);
+  })(req, res, next);
+});
+
+//Cadastro
+app.post('/cadastrar', function(req, res, next) {
+  passport.authenticate('cadastro', function(err, user, info) {
+    if (err) { 
+            return res.status(500).json(err);
+        }
+        if (user.error) {
+            return res.status(400).json({ error: user.error });
+        }else if (user==false)
+          return res.status(400).json({ error: "Cadastro inválido" });
+        
+        req.logIn(user, function(err) {
+            if (err) {
+                return res.status(500).json(err);
             }
             return res.status(200).json(user);
         });
@@ -165,7 +191,7 @@ app.get('/auth/facebook/callback',
  // route for logging out
 app.get('/logout', function(req, res) {
         req.logout();
-        res.redirect('/');
+        res.status(200).json("Deslogado")
 });
 
 // serve index and view partials
