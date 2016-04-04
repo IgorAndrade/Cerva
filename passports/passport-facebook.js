@@ -49,7 +49,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
                     // set all of the relevant information
                     newUser.nome  = profile.displayName;
                     newUser.email = profile.emails[0].value.toLowerCase(); // pull the first email
-                    newUser.senha = "password";
+                    newUser.senha = newUser.generateHash("password");
                     newUser.facebook.id    = profile.id;
                     newUser.facebook.token = token;
 

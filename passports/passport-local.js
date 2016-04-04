@@ -32,20 +32,25 @@ function(req, email, password, done) {
     // asynchronous
     process.nextTick(function() {
         Usuario.findOne({ 'email' :  email }, function(err, user) {
-            // if there are any errors, return the error
-            if (err)
-                return done(err);
+            try{
+                // if there are any errors, return the error
+                if (err)
+                    return done(err);
 
-            // if no user is found, return the message
-            if (!user)
-                return done(null, { error: 'Usuário não encontrado' });
+                // if no user is found, return the message
+                if (!user)
+                    return done(null, { error: 'Usuário não encontrado' });
 
-            if (!user.validPassword(password))
-                return done(null, { error: 'Senha inválida!' });
+                if (!user.validPassword(password))
+                    return done(null, { error: 'Senha inválida!' });
 
-            // all is well, return user
-            else
-                return done(null, user);
+                // all is well, return user
+                else
+                    return done(null, user);
+            }catch(e){
+                return done("Erro ao efetuar Login!");
+            }
+
         });
     });
 }));
@@ -71,13 +76,46 @@ function(req, email, password, done) {
             // if no user is found, return the message
             if (!user){
                 var novo = new Usuario(req.body);
-                novo.senha=novo.generateHash(novo.senha);
+                novo.senha=novo.generateHash(novo.senha||"password");
                 novo.save(function(err, user) {});
                 return done(null, novo);
             }
              // all is well, return user
             else
                 return done(null, user);
+        });
+    });
+}));
+
+passport.use('cadastro', new LocalStrategy({
+    // by default, local strategy uses username and password, we will override with email
+    usernameField : 'email',
+    passwordField : 'senha',
+    passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
+},
+function(req, email, password, done) {
+    if (email)
+        email = email.toLowerCase(); // Use lower-case e-mails to avoid case-sensitive e-mail matching
+
+    // asynchronous
+    process.nextTick(function() {
+        Usuario.findOne({ 'email' :  email }, function(err, user) {
+            // if there are any errors, return the error
+            if (err)
+                return done(err);
+
+            // if no user is found, return the message
+            if (!user){
+                var novo = new Usuario(req.body);
+                novo.senha=novo.generateHash(novo.senha);
+                novo.save(function(err, user) {
+                    return done(err, novo);
+                });
+                
+            }
+             // Usuário ja cadastrado
+            else
+                return done(null, { error: 'Usuário já cadastrado!' });
         });
     });
 }));
