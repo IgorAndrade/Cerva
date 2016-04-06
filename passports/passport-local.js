@@ -77,8 +77,10 @@ function(req, email, password, done) {
             if (!user){
                 var novo = new Usuario(req.body);
                 novo.senha=novo.generateHash(novo.senha||"password");
-                novo.save(function(err, user) {});
-                return done(null, novo);
+                novo.save(function(err, salvo) {
+                    return done(null, salvo);
+                });
+                
             }
              // all is well, return user
             else
@@ -108,8 +110,8 @@ function(req, email, password, done) {
             if (!user){
                 var novo = new Usuario(req.body);
                 novo.senha=novo.generateHash(novo.senha);
-                novo.save(function(err, user) {
-                    return done(err, novo);
+                novo.save(function(err, salvo) {
+                    return done(err, salvo);
                 });
                 
             }
