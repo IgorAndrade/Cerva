@@ -2,10 +2,15 @@ module.exports = function(){
 	var db = require('mongoose');
 
 	var cervejaria = db.Schema({
-		nome: {type: String, required: true},
+		beers: [{ type:db.Schema.Types.ObjectId, ref:"beers" }],
+		brewerydbId:String,
+		name:{type: String, required: [true,"Nome é Obrigatório"]},
+		website:String,
+		status:String,
+		pais:String,
 		endereco: String,
-		cervejas: [{ type:db.Schema.ObjectId, ref:"cervejas" }]
+		googlePlace:String
 	});
 
-	return db.model('cervejarias',cervejaria);
+	return db.model('breweries',cervejaria);
 }
