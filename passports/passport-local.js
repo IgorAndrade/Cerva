@@ -4,6 +4,7 @@
 module.exports  = function(app) {
 var LocalStrategy   = require('passport-local').Strategy;    
 var passport = require('passport');
+var constant = require('../env/all/constants');
 var Usuario = app.models.usuario;
 var configAuth = app.auth;
 
@@ -76,6 +77,7 @@ function(req, email, password, done) {
             // if no user is found, return the message
             if (!user){
                 var novo = new Usuario(req.body);
+                novo.perfil=[constant.perfis.USER];
                 novo.senha=novo.generateHash(novo.senha||"password");
                 novo.save(function(err, salvo) {
                     return done(null, salvo);
@@ -109,6 +111,7 @@ function(req, email, password, done) {
             // if no user is found, return the message
             if (!user){
                 var novo = new Usuario(req.body);
+                novo.perfil=[constant.perfis.USER];
                 novo.senha=novo.generateHash(novo.senha);
                 novo.save(function(err, salvo) {
                     return done(err, salvo);

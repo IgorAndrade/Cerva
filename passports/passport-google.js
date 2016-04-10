@@ -52,6 +52,7 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
                     newUser.google.id    = profile.id;
                     newUser.google.token = token;
                     newUser.senha = newUser.generateHash("password");
+                    newUser.perfil=[constant.perfis.USER];
 
                     // save the user
                     newUser.save(function(err) {

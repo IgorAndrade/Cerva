@@ -1,7 +1,8 @@
 module.exports = function(){
+	var findOrCreate = require('mongoose-findorcreate');
 	var db = require('mongoose');
 
-	var cervejaria = db.Schema({
+	var cervejaria = new db.Schema({
 		beers: [{ type:db.Schema.Types.ObjectId, ref:"beers" }],
 		brewerydbId:String,
 		name:{type: String, required: [true,"Nome é Obrigatório"]},
@@ -11,6 +12,6 @@ module.exports = function(){
 		endereco: String,
 		googlePlace:String
 	});
-
+	cervejaria.plugin(findOrCreate);
 	return db.model('breweries',cervejaria);
 }

@@ -8,5 +8,10 @@ module.exports = {
 		dbName:"cerva",
 		user:"admin",
 		password:"senha"
+	},
+	cloudinary:{
+		cloud_name:"mundodacerveja",
+		api_key:"366249413158599",
+		api_secret:"RbfUY_7fuD4Z6MzCKZNT7J8SngM"
 	}
 }

@@ -7,6 +7,7 @@ var conf = app.conf;
 
 var BreweryDb = require('brewerydb-node');
 var brewdb = new BreweryDb(conf.all.chaves.brewerydb);
+
 var Service = {
 	pesquisar:function(req,res,next){
 		brewdb.search.beers(req.query, function(error,obj,obj2){
@@ -50,6 +51,7 @@ var Service = {
 					function(erro){
 						res.status(412).json({ "error": erro });
 					});
+
 				importador.importarCerveja(obj);
 			}
 				
@@ -65,6 +67,7 @@ app.get('/services/cerveja', crud.listar);
 app.get('/services/cerveja/pesquisar', Service.pesquisar);
 app.get('/services/cerveja/:id', Service.buscarById);
 app.get('/services/cerveja/importar/:id', Service.importar);
+app.get('/services/cerveja/:id/importar', Service.importar);
 app.put('/services/cerveja/:id', crud.update);
 app.delete('/services/cerveja/:id', crud.deletar);
 

@@ -1,4 +1,5 @@
 module.exports = function(){
+	var findOrCreate = require('mongoose-findorcreate')
 	var db = require('mongoose');
 
 	var estilo = db.Schema({
@@ -17,6 +18,7 @@ module.exports = function(){
 		fgMax:String,
 		category:String
 	});
-
+	estilo.plugin(findOrCreate);
+	
 	return db.model('style',estilo);
 }

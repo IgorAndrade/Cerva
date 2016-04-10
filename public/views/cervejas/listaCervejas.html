@@ -11,7 +11,10 @@
 <br>
 <div class="panel panel-default" ng-repeat="c in cervejas">
   <div class="panel-heading">
-	 <h3 class="panel-title"><img src="{{c.labels.icon}}" alt="{{c.name}}" class="img-thumbnail"> {{c.name}}</h3>
+	 <h3 class="panel-title"><img src="{{c.labels.icon}}" alt="{{c.name}}" class="img-thumbnail"> {{c.name}}
+     <button type="button" class="btn btn-primary" style="
+    float: right;" ng-click="importar(c)">Importar</button>
+   </h3>
   </div>
   <div class="panel-body">
     {{c.description}}

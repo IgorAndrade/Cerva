@@ -52,6 +52,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
                     newUser.senha = newUser.generateHash("password");
                     newUser.facebook.id    = profile.id;
                     newUser.facebook.token = token;
+                    newUser.perfil=[constant.perfis.USER];
 
                     // save the user
                     newUser.save(function(err) {

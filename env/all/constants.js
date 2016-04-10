@@ -1,4 +1,8 @@
 module.exports = {
+	perfis:{
+		ADM:"adm",
+		USER:"user"
+	},
 	cerveja:{
 		status:{
 			importado:"importado",

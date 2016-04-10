@@ -14,6 +14,9 @@ angular.module('app', ['ngRoute','restangular'])
 	.when('/cerveja', { 
 		templateUrl : '/views/cerveja.html', 
 		controller : 'CervejaController'})
+	.when('/cerveja/:id', { 
+		templateUrl : '/views/cerveja.html', 
+		controller : 'CervejaController'})
 	.when('/listaCerveja', { 
 		templateUrl : '/views/cervejas/listaCervejas.html', 
 		controller : 'CervejaController'})

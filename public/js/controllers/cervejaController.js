@@ -3,11 +3,8 @@
 /* Controllers */
 
 angular.module('app').
-  controller('CervejaController', function ($scope, CervejaRepository,CervejariaRepository,$location) {
+  controller('CervejaController', function ($scope,$routeParams,CervejaRepository,$location,Restangular) {
 
-  	CervejariaRepository.getList().then(function(cervejarias){
-  		$scope.cervejarias=cervejarias;
-  	})
 
     $scope.pesquisar=function(){
       CervejaRepository.customGET("pesquisar",{q:$scope.query}).then(
@@ -30,6 +27,14 @@ angular.module('app').
         	  
         }
     };
+
+    $scope.importar = function(cerveja){
+      Restangular.one("/services/cerveja/importar",cerveja.id).get()
+        .then(function(novaCerveja){
+          $location.path("/cerveja/"+novaCerveja._id);
+      })
+      
+    }
 
 
   })
