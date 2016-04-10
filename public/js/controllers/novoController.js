@@ -3,9 +3,8 @@
 /* Controllers */
 
 angular.module('app').
-  controller('NovoController', function ($scope, $http) {
+  controller('NovoController', function ($scope, $http,userService) {
   	
-console.log("entrou novo");
-   $scope.welcome="novo";
+  	userService.init();
 
   })

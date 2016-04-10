@@ -2,7 +2,8 @@
 
 // Declare app level module which depends on filters, and services
 
-angular.module('app', ['ngRoute','restangular'])
+angular.module('app', ['ui.router','ngRoute','restangular','User'])
+/*
 .config( function ($routeProvider)  { 
 	$routeProvider
 	.when('/', { 
@@ -30,12 +31,44 @@ angular.module('app', ['ngRoute','restangular'])
 		$rootScope.$on('$viewContentLoaded', init);
 	})
 })
+*/
+.config(function($stateProvider, $urlRouterProvider) {
+	$urlRouterProvider.otherwise('/home');
+	$stateProvider
+		.state('home', {
+	      url: '/home',
+	      views: {
+	      	'menu':{templateUrl: 'views/diretivas/menu.html'},
+	        'content': {
+	          templateUrl: 'views/home.html',
+	          controller: 'HomeController'
+	        }
+	      }
+	     
+		})
+		.state('adm', {
+	      url: '/profile',
+	      views: {
+	      	'menu':{templateUrl: 'views/diretivas/menu.html'},
+	        'content': {
+	          templateUrl: 'views/cervejas/listaCervejas.html',
+	          controller: 'NovoController'
+	        }
+	      } 
+	     
+		})
+})
+.run(function($rootScope){
+	//$rootScope.$on( "$routeChangeStart", function(event, next, current) {
+		$rootScope.$on('$viewContentLoaded', init);
+	//})
+})
+
+
 .config(function(RestangularProvider) {
       RestangularProvider.setRestangularFields({
         id: '_id'
       });
     })
-.config(function ($httpProvider) {
-    $httpProvider.interceptors.push('TokenInterceptor');
-});;
+
 
