@@ -179,14 +179,14 @@ app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'e
 app.get('/auth/google/callback',
             passport.authenticate('google', {
                     failureRedirect : '/',
-                    successRedirect : '/#/listaCerveja'
+                    successRedirect : '/#/profile'
             }));
 //facebook
 app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
 app.get('/auth/facebook/callback',
             passport.authenticate('facebook', {
                     failureRedirect : '/',
-                    successRedirect : '/#/listaCerveja'
+                    successRedirect : '/#/profile'
             }));
  // route for logging out
 app.get('/logout', function(req, res) {

@@ -20,6 +20,15 @@ angular.module('app').directive("menu", function()
 
     return directive;
 	});
+angular.module('app').directive("login", function() 
+    { 
+         var directive = {};
+
+    directive.restrict = 'E'; /* restrict this directive to elements */
+    directive.templateUrl = "/views/diretivas/login.html";
+
+    return directive;
+    });
 angular.module('app').directive('clickLink',function($location) {
     return {
         link: function(scope, element, attrs) {

@@ -32,6 +32,7 @@
         <link rel="stylesheet" href="css/animate.css">
 		<!-- Main Stylesheet -->
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/app.css">
 		<!-- media-queries -->
         <link rel="stylesheet" href="css/media-queries.css">
 
@@ -51,7 +52,7 @@
         <!-- 
         Fixed Navigation
         ==================================== -->
-        <header id="navigation" class="navbar-fixed-top navbar">
+         <header id="navigation" class="navbar-fixed-top navbar">
             <div class="container">
                 <div class="navbar-header">
                     <!-- responsive nav button -->
@@ -71,15 +72,17 @@
                 </div>
 
 				<!-- main nav -->
-                <menu></menu>
+                <div ui-view="menu">
+	
+				</div>
 				<!-- /main nav -->
 				
             </div>
-        </header>
+		</header>
         <!--
         End Fixed Navigation
         ==================================== -->
-		<div ng-view>
+		<div ui-view="content">
 	
 		</div>
         <!--
@@ -151,9 +154,11 @@
 		<script src="js/lib/angular-route/angular-route.js"></script>
 		<script src="js/lib/restangular/node_modules/lodash/lodash.js"></script>  
 		<script src="js/lib/restangular/dist/restangular.js"></script>
+		<script src="js/lib/angular-ui-router/release/angular-ui-router.js"></script>
+		<script src="js/services/userService.js"></script>  
 		<script src="js/app.js"></script> 
 		<script src="js/services/cervejaService.js"></script> 
-		<script src="js/services/TokenInterceptor.js"></script> 
+		<script src="js/services/TokenInterceptor.js"></script>
 		<script src="js/controllers/homeController.js"></script> 
 		<script src="js/controllers/novoController.js"></script> 
 		<script src="js/controllers/cervejaController.js"></script> 

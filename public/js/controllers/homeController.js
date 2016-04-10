@@ -3,20 +3,35 @@
 /* Controllers */
 
 angular.module('app').
-  controller('HomeController', ['$scope','CervejaRepository','$routeParams', function ($scope,CervejaRepository,$routeParams) {
+  controller('HomeController',function ($scope,$window) {
 
-   $scope.welcome="Olá!"+$routeParams.uid;
-   if($routeParams.uid)
-    $window.sessionStorage.token = $routeParams.uid;
 
-   CervejaRepository.getList().then(function(lista){
-    $scope.cervejas = lista;
-    $scope.del=function(d,i){
-      $scope.cervejas.splice(i, 1);
-      d.remove();
-    }
+
+  $scope.total_avaliacao=200;
+  $scope.total_promocao=45;
+  $scope.total_eventos=100;
+
+  $scope.user={
+    nome:"",
+    senha:""
+  }
+
+  $scope.login = function(){
+
+  }
+
+  $scope.facebook = function(){
+    goUrl('/auth/facebook');
+  }
+
+  $scope.google = function(){
+    goUrl('/auth/google');
+  }
+
+
+  function goUrl(url){
+    var url = "http://" + $window.location.host + url;
+    $window.location.href = url;
+  }
+
   });
-  $scope.total=200;
-   //$scope.$on('$viewContentLoaded', init);
-
-  }]);
