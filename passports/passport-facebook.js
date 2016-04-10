@@ -3,6 +3,7 @@ var passport = require('passport');
 var Usuario = app.models.usuario;
 var configAuth = app.auth;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var constant = require('../env/all/constants');
 
 // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
