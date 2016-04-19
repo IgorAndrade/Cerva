@@ -1,6 +1,7 @@
-module.exports = function(modelo){
+module.exports = function(modelo,populate){
 	var self = this;
 	this.Modelo = modelo;
+	this.populate = populate;
 	this.callback = function(req,res,next){
 		var callback = function(erro, obj){
 			if(erro){
@@ -24,8 +25,10 @@ module.exports = function(modelo){
 	    };
 
 	this.update = function(req,res,next){
-	
-			self.Modelo.update({_id:req.params.id},{ $set: req.body},self.callback(req,res,next));
+		var obj = req.body;
+		if(self.Modelo.pre)
+			obj = self.Modelo.pre(obj)
+		self.Modelo.update({_id:req.params.id},{ $set: obj},self.callback(req,res,next));
 	};
 
 	this.listar = function(req,res,next){
@@ -38,15 +41,18 @@ module.exports = function(modelo){
 	    });
 	};
 	this.buscarById = function(req,res,next){
-		if(req.params.id)
-			self.Modelo.findById(req.params.id,function(erro,obj){
+		if(req.params.id){
+			var query = self.Modelo.findById(req.params.id);
+			if(self.populate)
+				query.populate(self.populate);
+			query.exec(function(erro,obj){
 	    		if(erro) 
 	    			res.status(400).json({ "error": erro });
 	    		else{
 	    			res.status(200).json(obj);
 	    		}
 		    });
-		else
+		}else
 			res.status(400).json({ "error": "Sem id" });
 	};
 

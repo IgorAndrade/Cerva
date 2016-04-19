@@ -723,3 +723,8 @@ label.error {
   right: 25px;
   z-index: 9;
 }
+
+.preview{
+  width: 150px;
+  height: 150px;
+}

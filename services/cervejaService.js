@@ -2,7 +2,7 @@ module.exports  = function(app) {
 var Crud = require('./crud');
 var Importador = require('./importadorService')(app);
 
-var crud = new Crud(app.models.cerveja);
+var crud = new Crud(app.models.cerveja,"brewery style imagens.rotulo imagens.outros");
 var conf = app.conf;
 
 var BreweryDb = require('brewerydb-node');
@@ -39,6 +39,11 @@ var Service = {
 		}
 	},
 
+	listarEstilos:function(req,res,next){
+		var crud = new Crud(app.models.estilo);
+		crud.listar(req,res,next);
+	},
+
 	importar:function(req,res,next){
 		brewdb.beer.getById(req.params.id, { withBreweries: "Y" }, function(error,obj,obj2){
 			if(error)
@@ -58,18 +63,20 @@ var Service = {
 		}); 
 	}
 
-
-
 };
 
 app.post('/services/cerveja', crud.inserir);
 app.get('/services/cerveja', crud.listar);
 app.get('/services/cerveja/pesquisar', Service.pesquisar);
-app.get('/services/cerveja/:id', Service.buscarById);
+app.get('/services/cerveja/estilos',Service.listarEstilos);
+app.get('/services/cerveja/brewdb/:id', Service.buscarById);
+app.get('/services/cerveja/:id', crud.buscarById);
 app.get('/services/cerveja/importar/:id', Service.importar);
 app.get('/services/cerveja/:id/importar', Service.importar);
 app.put('/services/cerveja/:id', crud.update);
 app.delete('/services/cerveja/:id', crud.deletar);
+
+
 
 return Service;
 

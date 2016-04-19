@@ -9,7 +9,6 @@ var logger = require('morgan');
 var methodOverride = require('method-override');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var multer = require('multer');
 var errorHandler = require('errorhandler');
 var expressValidator = require("express-validator");
 var passport = require('passport');
@@ -52,8 +51,6 @@ app.use(bodyParser.json());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// parse multipart/form-data
-app.use(multer());
 
 app.use(passport.initialize());
 app.use(passport.session());

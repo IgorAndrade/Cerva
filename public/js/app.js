@@ -2,7 +2,7 @@
 
 // Declare app level module which depends on filters, and services
 
-angular.module('app', ['ui.router','ngRoute','restangular','User'])
+angular.module('app', ['ui.router','ngRoute','restangular','ngStorage','ngFileUpload','User'])
 /*
 .config( function ($routeProvider)  { 
 	$routeProvider
@@ -49,13 +49,52 @@ angular.module('app', ['ui.router','ngRoute','restangular','User'])
 		.state('adm', {
 	      url: '/profile',
 	      views: {
-	      	'menu':{templateUrl: 'views/diretivas/menu.html'},
+	      	'menu':{templateUrl: 'views/diretivas/menuAdm.html'},
 	        'content': {
 	          templateUrl: 'views/cervejas/listaCervejas.html',
 	          controller: 'NovoController'
 	        }
 	      } 
-	     
+		})
+		.state('importar', {
+	      url: '/importar',
+	      views: {
+	      	'menu':{templateUrl: 'views/diretivas/menuAdm.html'},
+	        'content': {
+	          templateUrl: 'views/cervejas/importarCervejas.html',
+	          controller: 'NovoController'
+	        }
+	      } 
+		})
+		.state('cervejasList', {
+	      url: '/listar',
+	      views: {
+	      	'menu':{templateUrl: 'views/diretivas/menuAdm.html'},
+	        'content': {
+	          templateUrl: 'views/cervejas/listaCervejas.html',
+	          controller: 'NovoController'
+	        }
+	      } 
+		})
+		.state('cerveja', {
+	      url: '/cerveja',
+	      views: {
+	      	'menu':{templateUrl: 'views/diretivas/menuAdm.html'},
+	        'content': {
+	          templateUrl: 'views/cervejas/Cervejas.html',
+	          controller: 'CervejaController'
+	        }
+	      } 
+		})
+		.state('cerveja:id', {
+	      url: '/cerveja/:id',
+	      views: {
+	      	'menu':{templateUrl: 'views/diretivas/menuAdm.html'},
+	        'content': {
+	          templateUrl: 'views/cervejas/Cervejas.html',
+	          controller: 'CervejaController'
+	        }
+	      } 
 		})
 })
 .run(function($rootScope){
@@ -65,8 +104,10 @@ angular.module('app', ['ui.router','ngRoute','restangular','User'])
 })
 
 
-.config(function(RestangularProvider) {
-      RestangularProvider.setRestangularFields({
+.config(function(RestangularProvider,$windowProvider) {
+	var window = $windowProvider.$get();
+	RestangularProvider.setBaseUrl("http://"+window.location.host+"/services");
+    RestangularProvider.setRestangularFields({
         id: '_id'
       });
     })

@@ -27,5 +27,29 @@ module.exports = function(app){
 	});
 	cerveja.plugin(findOrCreate);
 	cerveja.plugin(relationship, { relationshipPathName:'brewery' });
+
+	cerveja.statics.pre = function(obj) {
+	 	if(obj.imagens){
+	 		if(obj.imagens.rotulo){
+	 			var rotulo = obj.imagens.rotulo;
+	 			if(rotulo._id){
+	 				obj.imagens.rotulo = rotulo._id
+	 			}
+	 		}
+	 		if(obj.imagens.garrafa){
+	 			var garrafa = obj.imagens.garrafa;
+	 			if(garrafa._id){
+	 				obj.imagens.garrafa = garrafa._id
+	 			}
+	 		}
+	 		if(obj.style && obj.style._id)
+	 			obj.style = obj.style._id;
+	 		
+	 		if(obj.brewery && obj.brewery._id)
+	 			obj.brewery = obj.brewery._id;
+	 	}
+	 	return obj;
+	};
+
 	return db.model('beers',cerveja);
 }
