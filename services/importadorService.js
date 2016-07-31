@@ -1,120 +1,91 @@
-module.exports  = function(app) {
-	var ModelCerveja = app.models.cerveja;
-	var ModelCervejaria = app.models.cervejaria;
-	var ModelEstilo = app.models.estilo;
-	
-
-	var constant = require('../env/all/constants');
-
-var service = function(callbackSucesso,callbackErro){ 
-	self=this;
-	this.callbackSucesso=callbackSucesso;
-	this.callbackErro=callbackErro;
-	this.imgServ = new app.services.imagemService(null,callbackErro);
-
-	this.importarCerveja = function(novaCerveja){
-		if(!self.novaCerveja){
-			self.novaCerveja=novaCerveja
-
-		}	
-
-		//var cerveja = new ModelCerveja(novaCerveja);
-
-		//Check cervejaria
-		if(!self.isObjectid(novaCerveja.brewery)){
-			self.importarCervejaria(novaCerveja,novaCerveja.breweries[0]);
-
-			//Check style
-		}else if(!self.isObjectid(novaCerveja.style)){
-			self.importarEstilo(novaCerveja,self.novaCerveja.style);
-		}else{
-			//Cria de fato a cerveja
-			var cerveja = new ModelCerveja(novaCerveja);
-
-			cerveja.brewerydbId = self.novaCerveja.id;
-			cerveja.status=constant.cerveja.status.importado;
-			var copo = self.novaCerveja.glass.name;
-			if(constant.cerveja.copos.hasOwnProperty(copo))
-				cerveja.glass=constant.cerveja.copos[copo];
-			else
-				cerveja.glass=copo;
-
-			ModelCerveja.findOne({brewerydbId:self.novaCerveja.id},function(erro,achou){
-				if(achou)
-					callbackSucesso(achou);
-				else{
-					//upload da img
-					self.imgServ.uploadCerveja(self.novaCerveja.labels.medium,
-						self.novaCerveja.id,
-						function(img){
-
-							cerveja.imagens.rotulo=img._id;
-
-							cerveja.save(function(erro,cervejaSalva){
-								if(!erro){ 
-									
-									ModelCerveja.populate(cervejaSalva,{path:"brewery style imagens.rotulo"},function(erro,populado){
-										if(!erro)
-											self.callbackSucesso(populado);
-										else
-											self.callbackErro(erro);
-									})
-								}else{
-									self.callbackErro(erro);
-								}
-							});
-
-						})
-				}
-			}).populate('brewery style imagens.rotulo');
-
-			
-		}
+module.exports = function (app) {
+    "use strict";
+    var sync = require('synchronize');
+    var ModelCerveja = app.models.cerveja;
+    var ModelCervejaria = app.models.cervejaria;
+    var ModelEstilo = app.models.estilo;
+    var ModelCategory = app.models.category;
+    var ImgService = require('./imagemService')(app);
 
 
-	};
 
-	this.importarCervejaria = function(novaCerveja,novaCervejaria){
-		novaCervejaria.brewerydbId = novaCervejaria.id;
-		novaCervejaria.status=constant.cerveja.status.importado;
 
-		//novaCervejaria.beers=[novaCerveja._id];
 
-		ModelCervejaria.findOrCreate(
-			{brewerydbId: novaCervejaria.brewerydbId},novaCervejaria,function(erro,cervejariaSalva,isNova){
 
-			if(!erro){ 
-				novaCerveja.brewery=cervejariaSalva._id;
-				self.importarCerveja(novaCerveja);
-			}else
-				self.callbackErro(erro);
-		})
-	};
+    var constant = require('../env/all/constants');
 
-	this.importarEstilo = function(novaCerveja,novoEstilo){
-		novoEstilo.brewerydbId =novoEstilo.id;
-		//var style = new ModelEstilo(novoEstilo);
-		//style.save(function(erro,newStyle){
-		ModelEstilo.findOrCreate(
-			{brewerydbId: novoEstilo.brewerydbId},novoEstilo,function(erro,newStyle,isNova){
-			if(!erro){
-				novaCerveja.style=newStyle._id;
-				self.importarCerveja(novaCerveja);
-			}else
-				self.callbackErro(erro);
-		});
+    var service = function (pop) {
+        var self = this;
+        self.populate = pop;
 
-	};
+        this.importarCerveja = function (cerveja,cb) {
+            try {
+                var imgService = new ImgService();
+                cerveja.status = constant.cerveja.status.importado;
+                cerveja.brewerydbId = cerveja.id;
 
-	this.isObjectid = function(str){
-		str = str + '';
-		var len = str.length, valid = false;
-		if (len == 12 || len == 24) {
-			valid = /^[0-9a-fA-F]+$/.test(str);
-		}
-		  return valid;
-	};
+                sync(ModelCerveja, "findOne");
+                var achou = ModelCerveja.findOne({brewerydbId: cerveja.id});
+                if (achou) {
+                    ModelCerveja.populate(achou, {path: self.populate}, cb);
+                    return;
+                }
 
-};
-return service;
+                //Copo
+                var copo = cerveja.glass.name;
+                if (constant.cerveja.copos.hasOwnProperty(copo))
+                    cerveja.glass = constant.cerveja.copos[copo];
+                else
+                    cerveja.glass = copo;
+
+                cerveja.brewery = self.importarCervejaria(cerveja.breweries[0]);
+                cerveja.style = self.importarEstilo(cerveja.style);
+
+                sync(imgService, "uploadFile");
+                var img = imgService.uploadFile(cerveja.labels.medium, {public_id: "cerveja_" + cerveja.brewerydbId});
+                cerveja.imagens = {rotulo: img};
+
+                cerveja = ModelCerveja.subDoc(cerveja);
+
+                var model = ModelCerveja(cerveja);
+                model.save(function (error, salvo) {
+                    if (error)
+                        cb(error);
+                    else {
+                        ModelCerveja.populate(salvo, {path: self.populate}, cb);
+                    }
+                })
+
+            }catch (error){
+                cb(error);
+            }
+
+        };
+
+        this.importarCervejaria = function (cervejaria) {
+            sync(ModelCervejaria, "findOrCreate");
+            cervejaria.status=constant.cerveja.status.importado;
+            cervejaria.brewerydbId = cervejaria.id;
+            cervejaria = ModelCervejaria.findOrCreate({ brewerydbId: cervejaria.id}, cervejaria);
+            return cervejaria;
+        };
+
+        this.importarEstilo = function (estilo) {
+            sync(ModelEstilo, "findOrCreate");
+            estilo.status=constant.cerveja.status.importado;
+            estilo.brewerydbId = estilo.id;
+            estilo.category = self.importarCategoria(estilo.category);
+            estilo = ModelEstilo.subDoc(estilo);
+            estilo = ModelEstilo.findOrCreate({ $or:[ { brewerydbId: estilo.id},{name: estilo.name}]}, estilo);
+            return estilo;
+        };
+        this.importarCategoria = function (categoria) {
+            sync(ModelCategory, "findOrCreate");
+            categoria.brewerydbId = categoria.id;
+            categoria = ModelCategory.findOrCreate({ $or:[ { brewerydbId: categoria.id},{name: categoria.name}]}, categoria);
+            return categoria;
+        };
+
+    };
+    return service;
 }

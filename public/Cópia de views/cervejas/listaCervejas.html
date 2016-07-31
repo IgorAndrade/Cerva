@@ -1,0 +1,26 @@
+
+<div class="container" style="margin-top:65px">
+	<section >
+		<h1>Pesquisa</h1>
+		<br>
+ <div class="input-group">
+      <input type="text" class="form-control" ng-model="query" placeholder="pesquisar cerveja ...">
+      <span class="input-group-btn">
+        <button class="btn btn-default" ng-click="pesquisar()" type="button">pesquisar!</button>
+      </span>
+ </div>
+<br>
+<div class="panel panel-default" ng-repeat="c in cervejas">
+  <div class="panel-heading">
+	 <h3 class="panel-title"><img src="{{c.labels.icon}}" alt="{{c.name}}" class="img-thumbnail"> {{c.name}}
+     <button type="button" class="btn btn-primary" style="
+    float: right;" ng-click="importar(c)">Importar</button>
+   </h3>
+  </div>
+  <div class="panel-body">
+    {{c.description}}
+  </div>
+</div>
+
+	</section>
+</div>

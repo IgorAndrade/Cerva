@@ -9,7 +9,10 @@ angular.module('app')
 		USER_LOGOUT:"user_logout"
 	})
 	.constant('CERVEJA_STATUS',{
-		NEW:"novo"
+		NOVO:"NOVO",
+		IMPORTADO:"IMPORTADO",
+		VERIFICADO:"VERIFICADO",
+		PENDENTE:"PENDENTE"
 	})
 	.constant('CONFIG',{
 		url_base:"http://192.168.0.13:3000"

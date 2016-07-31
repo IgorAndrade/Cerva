@@ -2,23 +2,34 @@
 
 /* Controllers */
 
-angular.module('app').
-  controller('HomeController',function ($scope,$window) {
+angular.module('app').controller(
+		'HomeController',
+		function($scope, $window, $http, $state) {
 
+			$scope.total_avaliacao = 200;
+			$scope.total_promocao = 45;
+			$scope.total_eventos = 100;
 
+			$scope.user = {
+				nome : "",
+				senha : ""
+			}
 
-  $scope.total_avaliacao=200;
-  $scope.total_promocao=45;
-  $scope.total_eventos=100;
-
-  $scope.user={
-    nome:"",
-    senha:""
-  }
-
-  $scope.login = function(){
-
-  }
+			$scope.login = function() {
+				var config = {
+					params : {
+						username : $scope.user.nome,
+						password : $scope.user.senha
+					},
+					ignoreAuthModule : 'ignoreAuthModule'
+				};
+				$http.post('authenticate', '', config).success(
+						function(data, status, headers, config) {
+							$state.go("cervejasList");
+						}).error(function(data, status, headers, config) {
+					$rootScope.authenticationError = true
+				});
+			}
 
   $scope.facebook = function(){
     goUrl('/auth/facebook');
@@ -34,4 +45,4 @@ angular.module('app').
     $window.location.href = url;
   }
 
-  });
+		});

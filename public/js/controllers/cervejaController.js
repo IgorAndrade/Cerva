@@ -2,88 +2,105 @@
 
 /* Controllers */
 
-angular.module('app').
-  controller('CervejaController', function ($scope,$state,CervejaModel,Restangular,Upload) {
-
-    $scope.cerveja= new CervejaModel();
-    Restangular.all("/cerveja/estilos").getList().then(function(lista){
-      $scope.estilos=lista;
-    });
+angular.module('app').controller('CervejaController', function ($scope, $state, Restangular, Upload, Tabela, StatusService) {
 
 
-    if($state.params && $state.params.id){
-      Restangular.one("/cerveja",$state.params.id).get()
-        .then(function(novaCerveja){
-          $scope.cerveja= new CervejaModel(novaCerveja);
-      })
+    $scope.salvar = salvarCerveja;
+
+    $scope.pesquisar = pesquisar;
+
+    $scope.importar = importar;
+
+    $scope.openCerveja = openCerveja;
+
+    $scope.listaStatus = StatusService;
+
+    $scope.tabela = new Tabela("/cerveja");
+
+    if ($state.params && ($state.params.id || $state.params.cerveja)) {
+        editar($state.params.id, $state.params.cerveja);
     }
 
-    $scope.pesquisar=function(){
-      Restangular.all("/cerveja").customGET("pesquisar",{q:$scope.query}).then(
-        function(result){
-          $scope.cervejas=result
-        },
-        function(error){
-          $scope.cervejas=[];
-        }
-      );
+    function editar(id, c) {
+        if (c != null)
+            $scope.cerveja = c;
+        else
+            Restangular.one("/cerveja", $state.params.id).get().then(function (novaCerveja) {
+                $scope.cerveja = novaCerveja.data;
+            }).catch(function (e) {
+                var a = e
+            })
+    }
+
+    function pesquisar() {
+        Restangular.all("/cerveja").customGET("pesquisar", {q: $scope.query}).then(
+            function (result) {
+                $scope.cervejas = result.data;
+            },
+            function (error) {
+                $scope.cervejas = [];
+            }
+        );
     };
 
-    function saveOk(result){
-      $state.go("cervejasList");
+
+    function saveOk(result) {
+        $state.go("cervejasList");
     };
-    function saveErro(result){
+    function saveErro(result) {
 
     };
 
-  	$scope.salvar = function() {
+    function salvarCerveja() {
         if ($scope.cerveja) {
-          if($scope.rotulo)
-            upload(getNameImg("",$scope.cerveja),"cerveja",function(){
-              enviarCerveja();
-            });
+            if ($scope.rotulo)
+                enviarCerveja(upload);
+            else
+                enviarCerveja();
 
-                	  
         }
     };
 
-    $scope.importar = function(cerveja){
-      Restangular.one("/cerveja/importar",cerveja.id).get()
-        .then(function(novaCerveja){
-          $state.go("cerveja",{id:novaCerveja._id});
-      })
-      
-    };
-
-    function getNameImg(prefix,cerveja){
-        return prefix+"_"+cerveja.name.split(" ")[0];
+    function openCerveja(cerveja) {
+        $state.go("cerveja:id", {id: cerveja._id});
     }
 
-    function enviarCerveja(){
-      if($scope.cerveja._id)
-        Restangular.copy($scope.cerveja).put().then(saveOk,saveErro); 
-      else
-        Restangular.all("/cerveja").post($scope.cerveja).then(saveOk,saveErro);  
-    }
-
-    function upload(name,pasta,cb) {
-      if($scope.rotulo){
-        var dados = {rotulo: $scope.rotulo, 'name': name, 'pasta':pasta};
-        if($scope.garrafa)
-          dados.garrafa=$scope.garrafa
-        Upload.upload({
-            url: 'services/upload',
-            arrayKey: '',
-           data: dados
-           //data: {file: file}
-        }).then(function (resp) {
-            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-        }, function (resp) {
-            console.log('Error status: ' + resp.status);
-        });
-      }
+    function importar(cerveja) {
+        Restangular.one("/cerveja/importar", cerveja.id).get()
+            .then(function (novaCerveja) {
+                openCerveja(novaCerveja.data);
+            }).catch(function (e) {
+            var a = e;
+        })
     };
 
-    
+    function getNameImg(prefix, cerveja) {
+        return prefix + "_" + cerveja.name.split(" ")[0];
+    };
 
-  })
+    function enviarCerveja(cb) {
+        if (!cb)
+            cb = saveOk;
+        if ($scope.cerveja._id) {
+            $scope.cerveja.put().then(cb, saveErro);
+        } else
+            Restangular.all("/cerveja").post($scope.cerveja).then(cb, saveErro);
+    };
+
+    function upload(result) {
+        if ($scope.rotulo) {
+            var dados = {rotulo: $scope.rotulo, 'id': result.data._id};
+            if ($scope.garrafa)
+                dados.garrafa = $scope.garrafa
+            if ($scope.outros)
+                dados.outros = $scope.outros
+            Upload.upload({
+                url: '/services/cerveja/upload/',
+                arrayKey: '',
+                data: dados
+                // data: {file: file}
+            }).then(saveOk, saveErro);
+        }
+    };
+
+})

@@ -1,0 +1,20 @@
+
+<div class="container" style="margin-top: 65px">
+	<section>
+		<h1>Estilos</h1>
+		<br>
+
+		<div>
+			<button ui-sref="cervejaria" class="btn btn-default">Novo</button>
+		</div>
+		<table ng-table="tabelaStyle"
+			class="table table-bordered table-striped table-condensed clickrow">
+			<tr ng-repeat="row in $data track by row._id">
+				<td data-title="'Estilo'" filter="{style: 'text'}"
+					sortable="'orderStyle'" ng-click="openStyle(row)">{{row.name}}</td>
+				<td data-title="'Categoria'" filter="{categoria: 'text'}"
+					sortable="'orderCategoria'" ng-click="openStyle(row)">{{row.category.name}}</td>
+			</tr>
+		</table>
+	</section>
+</div>

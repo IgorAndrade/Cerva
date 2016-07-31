@@ -2,7 +2,7 @@
 
 angular.module('app').factory("CervejaModel",function(CERVEJA_STATUS){
 	var Cerveja ={
-		_id:"",
+		id:"",
 		name:"",
 		brewerydbId:"",
 		nameDisplay:"",
@@ -10,17 +10,15 @@ angular.module('app').factory("CervejaModel",function(CERVEJA_STATUS){
 		abv:"",
 		ibu:"",
 		isOrganic:"",
-		status:CERVEJA_STATUS.NEW,
+		status:CERVEJA_STATUS.NOVO,
 		createDate:"",
 		glass:"",
 		servingTemperatureDisplay:"",
-		brewery:{_id:"",name:""},
+		brewery:{id:"",name:""},
 		style:"",
-		imagens:{
-			rotulo:"",
-			garrafa:"",
-			outras:[]
-		}
+		rotulo:"",
+		garrafa:"",
+		outras:[]
 	};
 
 	return function cerveja(obj){

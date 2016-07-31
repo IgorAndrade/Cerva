@@ -10,6 +10,7 @@ var methodOverride = require('method-override');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
+var sync    = require('synchronize');
 var expressValidator = require("express-validator");
 var passport = require('passport');
 var morgan = require('morgan'),
@@ -25,10 +26,11 @@ var app = module.exports = express();
 app.conf=conf;
 app.conf.all=allconf;
 app.auth=auth;
+var moment = require('moment');
+var inicio = new Date();
 /**
  * Configuration
  */
-
 // all environments
 app.set('port', conf.port || 3000);
 app.use(express.static(path.join(__dirname, '/public')));
@@ -54,6 +56,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+//app.use(function(req, res, next){sync.fiber(next)});
 
 app.isLoggedInAjax = function isLoggedInAjax(req, res, next) {
     if (req.isAuthenticated()) {
@@ -193,19 +197,19 @@ app.get('/logout', function(req, res) {
 
 // serve index and view partials
 app.get('/', function(req, res){
-  res.render('index');
+    res.render('../index');
 });
 
 // redirect all others to the index (HTML5 history)
 app.get('*', function(req, res){
-  res.render('index');
+    res.render('../index');
 });
-
 
 /**
  * Start Server
  */
 
 http.createServer(app).listen(conf.port, conf.ip, function () {
-  console.log('Express server listening on port ' + app.get('port'));
+    console.log('Express server listening on port ' + app.get('port'));
+    console.log(moment().diff(inicio, 'seconds'));
 });

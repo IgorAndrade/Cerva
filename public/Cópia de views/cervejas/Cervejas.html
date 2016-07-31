@@ -1,0 +1,67 @@
+<div class="container" style="margin-top:65px">
+  <section >
+    <h1>Cervejas</h1>
+    <br>
+<form ng-submit="submit()">
+  <div class="form-group">
+    <label for="nome">Nome</label>
+    <input type="text" ng-model="cerveja.name" class="form-control" id="nome" placeholder="nome da cerveja">
+  </div>
+  <div class="form-group">
+    <label for="desc">Descrição</label>
+    <textarea rows="5" type="text" ng-model="cerveja.description" class="form-control" id="desc" placeholder="descrição" ></textarea>
+  </div>
+  <div class="form-group">
+    <label for="desc">Cervejaria</label><br>
+    {{cerveja.brewery.name}}
+  </div>
+  <div class="form-group">
+    <label for="desc">Estilo</label>
+    <select ng-model="cerveja.style" class="form-control" style="width:450px" 
+    ng-options="style.name for style in estilos track by style._id">
+    </select>
+  </div> 
+  <div class="form-group form-inline">
+    <label for="nome">abv</label>
+      <input type="text" style="width:60px" ng-model="cerveja.abv" class="form-control" id="nome" >
+      <label for="nome">ibu</label>
+      <input type="text" style="width:60px" ng-model="cerveja.ibu" class="form-control" id="nome" >
+      <label for="nome">isOrganic</label>
+       <select ng-model="cerveja.isOrganic" class="form-control" style="width:80px">
+        <option value="N">Não</option>
+         <option value="Y">Sim</option>
+      </select>
+  </div>
+  <div class="form-group">
+    <label for="nome">Temperatura para servir</label>
+    <input type="text" ng-model="cerveja.servingTemperatureDisplay" class="form-control" id="nome" placeholder="Qual a faixa de temperatura ideal?">
+  </div>
+
+  <div class="form-group">
+    <label for="nome">Imagens</label>
+    <div class="row">
+      <div class="col-md-4">
+        <img class="img-thumbnail" ngf-thumbnail="rotulo" ngf-size="{width: 100, height: 100, quality: 0.9}"/>
+        <br>
+        <div class="btn btn-link btn-sm" ngf-select ng-model="rotulo" name="rotulo" ngf-pattern="'image/*'"
+        ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100">Rotulo</div>
+      </div>
+      <div class="col-md-4">
+        <img class="img-thumbnail" ngf-thumbnail="garrafa" ngf-size="{width: 100, height: 100, quality: 0.9}"/>
+        <br>
+        <div class="btn btn-link btn-sm" ngf-select ng-model="garrafa" name="garrafa" ngf-pattern="'image/*'"
+        ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100">Garrafa</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" ng-true-value="'revisado'" ng-model="cerveja.status"> revisado
+    </label>
+  </div>
+  <button type="submit" ng-click="salvar()" class="btn btn-default">Salvar</button>
+</form>
+<br>
+</section>
+</div>

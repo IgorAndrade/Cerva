@@ -25,7 +25,7 @@ angular.module('app').directive("login", function()
          var directive = {};
 
     directive.restrict = 'E'; /* restrict this directive to elements */
-    directive.templateUrl = "/views/diretivas/login.html";
+    directive.templateUrl = "views/diretivas/login.html";
 
     return directive;
     });

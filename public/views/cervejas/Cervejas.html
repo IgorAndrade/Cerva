@@ -13,13 +13,11 @@
   </div>
   <div class="form-group">
     <label for="desc">Cervejaria</label><br>
-    {{cerveja.brewery.name}}
-  </div>
+    {{cerveja.brewery.name}} <cervejaria-Dlg retorno="cerveja.brewery" />
+  </div> 
   <div class="form-group">
     <label for="desc">Estilo</label>
-    <select ng-model="cerveja.style" class="form-control" style="width:450px" 
-    ng-options="style.name for style in estilos track by style._id">
-    </select>
+    {{cerveja.style.name }} <style-dlg retorno="cerveja.style" st-Id='styleDialog.html' />
   </div> 
   <div class="form-group form-inline">
     <label for="nome">abv</label>
@@ -41,27 +39,45 @@
     <label for="nome">Imagens</label>
     <div class="row">
       <div class="col-md-4">
+      	<img src="{{cerveja.imagens.rotulo.url}}" class="img-thumbnail imgPequena" ng-show="rotulo==null" />
         <img class="img-thumbnail" ngf-thumbnail="rotulo" ngf-size="{width: 100, height: 100, quality: 0.9}"/>
         <br>
         <div class="btn btn-link btn-sm" ngf-select ng-model="rotulo" name="rotulo" ngf-pattern="'image/*'"
-        ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100">Rotulo</div>
+        ngf-accept="'image/*'" ngf-max-size="4MB" ngf-min-height="100">Rotulo</div>
       </div>
       <div class="col-md-4">
+      	<img src="{{cerveja.garrafa.url}}" class="img-thumbnail imgPequena" ng-show="garrafa==null" />
         <img class="img-thumbnail" ngf-thumbnail="garrafa" ngf-size="{width: 100, height: 100, quality: 0.9}"/>
         <br>
         <div class="btn btn-link btn-sm" ngf-select ng-model="garrafa" name="garrafa" ngf-pattern="'image/*'"
-        ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100">Garrafa</div>
+        ngf-accept="'image/*'" ngf-max-size="4MB" ngf-min-height="100">Garrafa</div>
+      </div>
+      <div class="col-md-4">
+        <img class="img-thumbnail" ngf-thumbnail="outros" ngf-size="{width: 100, height: 100, quality: 0.9}"/>
+        <br>
+        <div class="btn btn-link btn-sm" ngf-select ng-model="outros" name="outros" ngf-pattern="'image/*'"
+        ngf-accept="'image/*'" ngf-max-size="4MB" ngf-min-height="100" ngf-multiple="true">Garrafa</div>
       </div>
     </div>
   </div>
 
   <div class="checkbox">
     <label>
-      <input type="checkbox" ng-true-value="'revisado'" ng-model="cerveja.status"> revisado
+      <input type="checkbox" ng-true-value="'VERIFICADO'" ng-model="cerveja.status"> revisado
     </label>
   </div>
   <button type="submit" ng-click="salvar()" class="btn btn-default">Salvar</button>
 </form>
 <br>
 </section>
+<div id="dgst" style="display:none">
+		<table ng-table="stCtrl.tabela"
+			class="table table-bordered table-striped table-condensed">
+			<tr ng-repeat="row in $data track by row.id">
+				<td data-title="'Nome'" filter="{filterStyle: 'text'}"
+					sortable="'orderStyle'" ng-click="stCtrl.click(row)">{{row.name}}</td>
+				<td data-title="'Categoria'" filter="{filterCat: 'text'}"  >{{row.category.name}}</td>
+			</tr>
+		</table>
+</div>
 </div>

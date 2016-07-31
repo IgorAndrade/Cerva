@@ -16,9 +16,17 @@ module.exports = function(){
 		ogMin:String,
 		fgMin:String,
 		fgMax:String,
-		category:String
+		status:String,
+		category:{type:db.Schema.Types.ObjectId, ref:"category",required: [true,"cervejaria é obrigatório"]},
 	});
 	estilo.plugin(findOrCreate);
+
+	estilo.statics.subDoc =function(obj){
+		if(obj.category && obj.category._id){
+			obj.category = obj.category._id;
+		}
+		return obj;
+	};
 	
 	return db.model('style',estilo);
 }

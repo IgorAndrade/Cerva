@@ -1,0 +1,15 @@
+<a href ng-click="cervCtrl.open()" class="btn-link">selecionar</a>
+<script type="text/ng-template" id="modalCervejaria">
+        <div class="modal-header">
+            <h3 class="modal-title">Cervejaria</h3>
+        </div>
+        <div class="modal-body">
+			<table ng-table="tabela"
+				class="table table-bordered table-striped table-condensed">
+				<tr ng-repeat="row in $data track by row._id">
+					<td data-title="'Nome'" filter="{name: 'text'}"
+						sortable="'name'" ng-click="click(row)">{{row.name}}</td>
+				</tr>
+			</table>
+		</div>
+</script>

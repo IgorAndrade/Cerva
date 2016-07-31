@@ -1,8 +1,10 @@
 module.exports = function(app){
+	"use strict";
 	var findOrCreate = require('mongoose-findorcreate');
 	var relationship = require("mongoose-relationship");
 	var db = require('mongoose');
 	var img = require('./imagens');
+	var constant = require('../env/all/constants');
 
 	var cerveja = db.Schema({
 		brewerydbId:String,
@@ -17,7 +19,7 @@ module.exports = function(app){
 		glass:String,
 		servingTemperatureDisplay:String,
 		brewery: { type:db.Schema.Types.ObjectId, ref:"breweries", childPath:"beers" , required: [true,"Cervejaria é obrigatório"]},
-		style:{type:db.Schema.Types.ObjectId, ref:"style",required: [true,"cervejaria é obrigatório"]},
+		style:{type:db.Schema.Types.ObjectId, ref:"style",required: [true,"style é obrigatório"]},
 		imagens:{
 			rotulo:{type:db.Schema.Types.ObjectId, ref:"imagens"},
 			garrafa:{type:db.Schema.Types.ObjectId, ref:"imagens"},
@@ -28,7 +30,7 @@ module.exports = function(app){
 	cerveja.plugin(findOrCreate);
 	cerveja.plugin(relationship, { relationshipPathName:'brewery' });
 
-	cerveja.statics.pre = function(obj) {
+	cerveja.statics.subDoc = function(obj) {
 	 	if(obj.imagens){
 	 		if(obj.imagens.rotulo){
 	 			var rotulo = obj.imagens.rotulo;

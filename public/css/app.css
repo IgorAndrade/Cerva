@@ -74,3 +74,10 @@
 .social-login a:last-child{
   background-color: #DF4A32;
 }
+
+.imgPequena{
+	width: 90px;
+}
+.clickrow tr{
+	cursor: pointer;
+}
