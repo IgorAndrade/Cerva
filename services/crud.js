@@ -31,7 +31,7 @@ module.exports = function (modelo, populate) {
             obj = self.Modelo.subDoc(obj)
         self.Modelo.update({_id: req.params.id}, {$set: obj}, function (error, row, a) {
             if (error) {
-                res.status(412).json(erro);
+                res.status(412).json(error);
             }else{
                 self.Modelo.findById(req.params.id,self.callback(req, res, next));
             }
