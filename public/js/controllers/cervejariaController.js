@@ -27,33 +27,6 @@ angular.module('app').
     	})
     }
     	
-    
-    function popularListaCerv(param){
-			var q={
-				pg:param.page()-1,
-				qtd:param.count()
-			};
-
-			if(param.filter()){
-				for(var f in param.filter())
-					q[f]=param.filter()[f];
-			}
-			if(param.sorting()){
-				for(var s in param.sorting())
-					q[s]=param.sorting()[s];
-			}
-			
-			var deferred = $q.defer();
-			Restangular.all("/cervejaria").customGET(null,q,null).then( 
-					function(result) {
-						var r = result.data;
-						param.total(r.totalElements);
-						deferred.resolve(r.content);
-					}).catch(function(e){
-						deferred.resolve([]);
-					});
-			return deferred.promise 
-		};
 
     function saveOk(result){
       $state.go("cervejariasList");
@@ -82,7 +55,7 @@ angular.module('app').
     function enviarCerveja(cb){
     	if(!cb)
     		cb=saveOk;
-      if($scope.cervejaria.id){
+      if($scope.cervejaria._id){
     	 $scope.cervejaria.put().then(cb,saveErro); 
       }else
         Restangular.all("/cervejaria").post($scope.cervejaria).then(cb,saveErro);  
@@ -90,7 +63,7 @@ angular.module('app').
 
     function upload(result) {
       if($scope.images){
-        var dados = {images: $scope.images, 'id': result.data.id};
+        var dados = {images: $scope.images, 'id': result.data._id};
         Upload.upload({
             url: 'service/cervejaria/upload',
             arrayKey: '',

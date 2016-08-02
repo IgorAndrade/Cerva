@@ -5,8 +5,10 @@ module.exports = function(){
 	var cervejaria = new db.Schema({
 		beers: [{ type:db.Schema.Types.ObjectId, ref:"beers" }],
 		brewerydbId:String,
+		description:String,
 		name:{type: String, required: [true,"Nome é Obrigatório"]},
 		website:String,
+		imagem:{type:db.Schema.Types.ObjectId,ref:"imagens"},
 		status:String,
 		pais:String,
 		endereco: String,

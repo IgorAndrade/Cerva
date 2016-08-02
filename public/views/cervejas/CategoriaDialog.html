@@ -14,7 +14,7 @@
         <div class="modal-body">
 			<table ng-table="tabela"
 				class="table table-bordered table-striped table-condensed">
-				<tr ng-repeat="row in $data track by row.id">
+				<tr ng-repeat="row in $data track by row._id">
 					<td data-title="'Nome'" filter="{categoria: 'text'}"
 						sortable="'sortCategoria'" ng-click="click(row)">{{row.name}}</td>
 				</tr>

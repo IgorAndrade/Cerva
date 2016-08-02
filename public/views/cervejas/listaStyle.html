@@ -14,6 +14,8 @@
 					sortable="'orderStyle'" ng-click="openStyle(row)">{{row.name}}</td>
 				<td data-title="'Categoria'" filter="{categoria: 'text'}"
 					sortable="'orderCategoria'" ng-click="openStyle(row)">{{row.category.name}}</td>
+				<td data-title="'Status'" filter="{status: 'select'}" filter-data="listaStatus"
+					ng-click="openStyle(row)">{{row.status}}</td>
 			</tr>
 		</table>
 	</section>

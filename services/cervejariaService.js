@@ -1,7 +1,7 @@
 module.exports  = function(app) {
 var Crud = require('./crud');
 
-var crud = new Crud(app.models.cervejaria);
+var crud = new Crud(app.models.cervejaria,"imagem");
 
 var Service = {
 

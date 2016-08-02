@@ -66,6 +66,12 @@ module.exports = function (app) {
             sync(ModelCervejaria, "findOrCreate");
             cervejaria.status=constant.cerveja.status.importado;
             cervejaria.brewerydbId = cervejaria.id;
+            //img
+            var imgService = new ImgService();
+            sync(imgService, "uploadFile");
+            var img = imgService.uploadFile(cervejaria.images.medium, {public_id: "cervejaria" + cervejaria.brewerydbId});
+            cervejaria.imagem = img._id;
+
             cervejaria = ModelCervejaria.findOrCreate({ brewerydbId: cervejaria.id}, cervejaria);
             return cervejaria;
         };
