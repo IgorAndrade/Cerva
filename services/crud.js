@@ -27,6 +27,7 @@ module.exports = function (modelo, populate) {
 
     this.update = function (req, res, next) {
         var obj = req.body;
+        delete obj._id;
         if (self.Modelo.subDoc)
             obj = self.Modelo.subDoc(obj)
         self.Modelo.update({_id: req.params.id}, {$set: obj}, function (error, row, a) {

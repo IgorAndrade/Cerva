@@ -10,11 +10,14 @@ module.exports = function (app) {
             var obj = req.body;
             var category = obj.category;
             if(category) {
-                if (category._id)
-                    ModelCat.update({_id: category._id}, {$set: category}, function (error, row, a) {
-                        req.body.category=category;
+                if (category._id){
+                    var id = category._id;
+                    delete category._id;
+                    ModelCat.update({_id: id}, {$set: category}, function (error, row, a) {
+                        req.body.category=id;
                         next();
                     });
+                }
                 else {
                     var model = new ModelCat(category);
                     model.save(function (error,cat) {
