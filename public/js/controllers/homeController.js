@@ -18,12 +18,12 @@ angular.module('app').controller(
 			$scope.login = function() {
 				var config = {
 					params : {
-						username : $scope.user.nome,
-						password : $scope.user.senha
+						email : $scope.user.nome,
+						senha : $scope.user.senha
 					},
 					ignoreAuthModule : 'ignoreAuthModule'
 				};
-				$http.post('authenticate', '', config).success(
+				$http.post('login', '', config).success(
 						function(data, status, headers, config) {
 							$state.go("cervejasList");
 						}).error(function(data, status, headers, config) {

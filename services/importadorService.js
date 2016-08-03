@@ -69,7 +69,7 @@ module.exports = function (app) {
             //img
             var imgService = new ImgService();
             sync(imgService, "uploadFile");
-            var img = imgService.uploadFile(cervejaria.images.medium, {public_id: "cervejaria" + cervejaria.brewerydbId});
+            var img = imgService.uploadFile(cervejaria.images.medium, {public_id: "cervejaria_" + cervejaria.brewerydbId});
             cervejaria.imagem = img._id;
 
             cervejaria = ModelCervejaria.findOrCreate({ brewerydbId: cervejaria.id}, cervejaria);

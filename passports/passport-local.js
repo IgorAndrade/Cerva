@@ -40,10 +40,10 @@ function(req, email, password, done) {
 
                 // if no user is found, return the message
                 if (!user)
-                    return done(null, { error: 'Usuário não encontrado' });
+                    return done({ error: 'Usuário não encontrado' }, null);
 
                 if (!user.validPassword(password))
-                    return done(null, { error: 'Senha inválida!' });
+                    return done({ error: 'Senha inválida!' }, null);
 
                 // all is well, return user
                 else
@@ -120,9 +120,28 @@ function(req, email, password, done) {
             }
              // Usuário ja cadastrado
             else
-                return done(null, { error: 'Usuário já cadastrado!' });
+                return done({ error: 'Usuário já cadastrado!' }, null);
         });
     });
 }));
 
+    function callback(req, res){
+        return function(err, user, info) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            else if (user==false)
+                return res.status(400).json({ error: "Login inválido",msg:info });
+
+            req.logIn(user, function(err) {
+                if (err) {
+                    return res.status(500).json(err);
+                }
+                return res.status(200).json(user);
+            });
+
+            //  res.status(200).json(req.user);
+        }
+    }
+return callback;
 };
