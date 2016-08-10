@@ -3,8 +3,6 @@ module.exports = function(app){
 	var findOrCreate = require('mongoose-findorcreate');
 	var relationship = require("mongoose-relationship");
 	var db = require('mongoose');
-	var img = require('./imagens');
-	var constant = require('../env/all/constants');
 
 	var cerveja = db.Schema({
 		brewerydbId:String,
@@ -51,6 +49,16 @@ module.exports = function(app){
 	 			obj.brewery = obj.brewery._id;
 	 	}
 	 	return obj;
+	};
+
+
+	cerveja.statics.isObjectid = function(str){
+		str = str + '';
+		var len = str.length, valid = false;
+		if (len == 12 || len == 24) {
+			valid = /^[0-9a-fA-F]+$/.test(str);
+		}
+		return valid;
 	};
 
 	return db.model('beers',cerveja);
