@@ -111,29 +111,12 @@ app.get('/profile', app.isLoggedInAjax, function(req, res) {
 
 //Ajax Login
 app.post('/login', function(req, res, next) {
-  passport.authenticate('local-login', app.passports.passportLocal(req, res))(req, res, next);
+  passport.authenticate('local-login', app.passports.passportLocal.login(req, res))(req, res, next);
 });
 
 //Logado via redesocial
 app.post('/logadoRedeSocial', function(req, res, next) {
-  passport.authenticate('logado-redesocial', function(err, user, info) {
-    if (err) { 
-            return res.status(500).json(err);
-        }
-        if (user.error) {
-            return res.status(400).json({ error: user.error });
-        }else if (user==false)
-          return res.status(400).json({ error: "Login inválido" });
-        
-        req.logIn(user, function(err) {
-            if (err) {
-                return res.status(500).json(err);
-            }
-            return res.status(200).json(user);
-        });
-        
-       // res.status(200).json(req.user);
-  })(req, res, next);
+  passport.authenticate('logado-redesocial',app.passports.passportLocal.cadastro(req, res))(req, res, next);
 });
 
 //Cadastro

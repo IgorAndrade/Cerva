@@ -125,7 +125,7 @@ function(req, email, password, done) {
     });
 }));
 
-    function callback(req, res){
+    function callbackLogin(req, res){
         return function(err, user, info) {
             if (err) {
                 return res.status(500).json(err);
@@ -142,6 +142,27 @@ function(req, email, password, done) {
 
             //  res.status(200).json(req.user);
         }
+    };
+    function callbackCadastro(req, res) {
+        return function (err, user, info) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            if (user.error) {
+                return res.status(400).json({error: user.error});
+            } else if (user == false)
+                return res.status(400).json({error: "Login inválido"});
+
+            req.logIn(user, function (err) {
+                if (err) {
+                    return res.status(500).json(err);
+                }
+                return res.status(200).json(user);
+            });
+
+            // res.status(200).json(req.user);
+        }
     }
-return callback;
+
+return {login:callbackLogin,cadastro:callbackCadastro};
 };
