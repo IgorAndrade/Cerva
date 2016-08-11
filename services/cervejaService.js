@@ -1,4 +1,5 @@
 module.exports = function (app) {
+    "use strict";
     var sync = require('synchronize');
     var Crud = require('./crud');
     var multer = require('multer');
@@ -8,6 +9,7 @@ module.exports = function (app) {
     var conf = app.conf;
     var constant = require('../env/all/constants');
     var ImgService = require('./imagemService')(app);
+    var merge = require('merge');
 
     var BreweryDb = require('brewerydb-node');
     var brewdb = new BreweryDb(conf.all.chaves.brewerydb);
@@ -17,10 +19,11 @@ module.exports = function (app) {
             try {
                 sync.parallel(function () {
                     brewdb.search.beers({withBreweries: "Y", q: req.query.q}, sync.defers());
-                    ModelCerveja.find({name: new RegExp(req.query.q,"i")}).populate("brewery style imagens.rotulo imagens.outros").exec(sync.defers());
+                    ModelCerveja.find({name: new RegExp(req.query.q, "i")}).populate("brewery style imagens.rotulo imagens.outros").exec(sync.defers());
                 });
                 var results = sync.await();
-                results = [].concat.apply(results[0][0], results[1]);
+                results = Service.convertFromBreweryDb(results[0][0],results[1][0]);
+               // results = [].concat.apply(Service.convertFromBreweryDb(results[0][0]), results[1]);
                 res.status(200).json(results);
             } catch (e) {
                 res.status(412).json({"error": e});
@@ -28,23 +31,32 @@ module.exports = function (app) {
         },
         buscarById: function (req, res, next) {
             var cerveja = null;
-            if(ModelCerveja.isObjectid(req.params.id))
+            if (ModelCerveja.isObjectid(req.params.id))
                 crud.buscarById(req, res, next);
             else
-                Service.importar(req,res,next);
+                Service.importar(req, res, next);
         },
 
-        convertFromBreweryDb: function (lista) {
-            var resultado = [];
-            for (var c in lista) {
-                var cerveja = new app.models.cerveja();
-                cerveja.nome = c.name;
-                cerveja.abv = c.abv;
-                cerveja.descricao = c.description;
+        convertFromBreweryDb: function (listaBrewdb, listaLocal) {
+            for (var i in listaBrewdb) {
+                var bCerva = listaBrewdb[i];
 
-
-                resultado.push(cerveja);
+                var idx = listaLocal.map(function (e) {
+                    return e.brewerydbId;
+                }).indexOf(bCerva.id);
+                if(idx<0){
+                    var cerveja = {
+                        imagens: {
+                            rotulo: {url:(bCerva.labels)? bCerva.labels.medium:""}
+                        },
+                        brewerydbId:bCerva.id,
+                        brewery:bCerva.breweries[0]
+                    };
+                    var join = merge(bCerva, cerveja);
+                    listaLocal.push(join);
+                }
             }
+            return listaLocal;
         },
 
         listarEstilos: function (req, res, next) {

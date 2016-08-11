@@ -7,11 +7,6 @@ module.exports = function (app) {
     var ModelCategory = app.models.category;
     var ImgService = require('./imagemService')(app);
 
-
-
-
-
-
     var constant = require('../env/all/constants');
 
     var service = function (pop) {
