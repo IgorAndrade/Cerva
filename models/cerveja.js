@@ -22,7 +22,8 @@ module.exports = function(app){
 			rotulo:{type:db.Schema.Types.ObjectId, ref:"imagens"},
 			garrafa:{type:db.Schema.Types.ObjectId, ref:"imagens"},
 			outras:[{type:db.Schema.Types.ObjectId, ref:"imagens"}]
-		}
+		},
+		avaliacoes:[{ type:db.Schema.Types.ObjectId, ref:"avaliacao" }]
 
 	});
 	cerveja.plugin(findOrCreate);
