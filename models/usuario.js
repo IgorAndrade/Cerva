@@ -15,7 +15,8 @@ module.exports = function(){
 		facebook:{
 			id:String,
 			token:String
-		}
+		},
+		avaliacoes:[{ type:db.Schema.Types.ObjectId, ref:"avaliacao" }]
 	});
 
 
